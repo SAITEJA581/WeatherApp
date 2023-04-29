@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import logo from "./searchimg.jpeg";
 import logo1 from "./sun.png";
 import logo2 from "./humidity.png";
@@ -25,7 +25,7 @@ function App() {
   
   const [name, setName] = useState('');
   const [error, setError] = useState('');
-  // const [date, setDate] = useState(new Date());
+  const inputRef = useRef();
   const getDate = () => {
     const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -72,7 +72,8 @@ function App() {
         }
         setError('');
        console.log(res.data);
-       setData({...data, celcius: res.data.main.temp, name:res.data.name, humidity: res.data.main.humidity, speed: res.data.wind.speed, image:imagePath})
+       setData({...data, celcius: res.data.main.temp, name:res.data.name, humidity: res.data.main.humidity, speed: res.data.wind.speed, image:imagePath,})
+       inputRef.current.value=""
       })
       .catch(err => {
         if(err.response.status === 404) {
@@ -89,11 +90,11 @@ function App() {
     <div className="container">
       <div className="weather">
         <div className="title">
-        <h1> Weather App</h1>
+          <h1> Weather App</h1>
         </div>
         <div className="search">
-        <input type="text" placeholder="Enter City Name" autoComplete="off" onChange={e => setName(e.target.value)} />
-        <button> <img src={logo} onClick={handleClick} alt= "mylogo" /> </button>
+          <input type="text" placeholder="Enter City Name" autoComplete="off" onChange={e => setName(e.target.value)} ref={inputRef} />
+          <button> <img src={logo} onClick={handleClick} alt= "mylogo" /> </button>
         </div>
         <div className="error">
           <p>{error}</p>
@@ -111,17 +112,17 @@ function App() {
               <div className="humidity">
                 <p>{Math.round(data.humidity)}%</p>
                 <p>Humidity</p>
-                </div>
-                </div>
+              </div>
+              </div>
                 <div className="col">
                   <img src={logo3} alt="wind" />
                   <div className="wind">
                     <p>{Math.round(data.speed)} Km/h</p>
                     <p>Wind</p>
                   </div>
+                </div>
               </div>
             </div>
-          </div>
        </div>
     </div>
   )
